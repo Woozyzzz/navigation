@@ -118,78 +118,120 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 
   return newRequire;
 })({"epB2":[function(require,module,exports) {
-(function () {
-  var $siteList = $(".siteList");
-  var $last = $(".last");
-  var x = window.localStorage.getItem("x");
-  var xObject = JSON.parse(x);
-  var hashMap = xObject || [{
-    logoType: "text",
-    logo: "a",
-    link: "acfun.cn",
-    url: "//acfun.cn"
-  }, {
-    logoType: "image",
-    logo: "b",
-    img: "../src/images/bilibili.png",
-    link: "bilibili.com",
-    url: "//bilibili.com"
-  }];
+function loadData() {
+  return JSON.parse(window.localStorage.getItem("x"));
+}
 
-  var render = function render() {
-    $siteList.find("li:not(.last)").remove();
-    hashMap.forEach(function (node, index) {
-      if (node.logoType === "text") {
-        var $li = $("<li>\n    <a href=\"".concat(node.url, "\">\n      <div class=\"site\">\n        <div class=\"logo\">").concat(node.logo, "</div>\n        <div class=\"link\">").concat(node.link, "</div>\n        <div class=\"close\">\n          <svg class=\"icon\">\n            <use xlink:href=\"#icon-Close\"></use>\n          </svg>\n        </div>\n      </div>\n    </a>\n  </li>"));
-        $last.before($li);
-      } else if (node.logoType === "image") {
-        var _$li = $("<li>\n    <a href=\"".concat(node.url, "\">\n      <div class=\"site\">\n        <div class=\"logo\">\n        <img src=\"").concat(node.img, "\" alt=\"").concat(node.logo, "\" />\n        </div>\n        <div class=\"link\">").concat(node.link, "</div>\n        <div class=\"close\">\n          <svg class=\"icon\">\n            <use xlink:href=\"#icon-Close\"></use>\n          </svg>\n        </div>\n      </div>\n    </a>\n  </li>"));
+function saveData(dataList) {
+  return window.localStorage.setItem("x", JSON.stringify(dataList));
+}
 
-        $last.before(_$li);
-      }
-
-      $(".close").on("click", function (e) {
-        e.stopPropagation();
-        hashMap.splice(index, 1);
-        var string = JSON.stringify(hashMap);
-        window.localStorage.setItem("x", string);
+function render() {
+  $siteList.find("li:not(.last)").remove();
+  hashMap.forEach(function (node, index) {
+    if (node.logoType === "text") {
+      $last.before($("<li>\n    <a href=\"".concat(node.url, "\">\n      <div class=\"site\">\n        <div class=\"logo\">").concat(node.logo, "</div>\n        <div class=\"link\">").concat(node.link, "</div>\n        <div class=\"close\">\n          <svg class=\"icon\">\n            <use xlink:href=\"#icon-close1\"></use>\n          </svg>\n        </div>\n      </div>\n    </a>\n  </li>")));
+    } else if (node.logoType === "image") {
+      $last.before($("<li>\n    <a href=\"".concat(node.url, "\">\n      <div class=\"site\">\n        <div class=\"logo\">\n        <img id=\"img").concat(index, "\" src=\"").concat(node.img, "\"/>\n        </div>\n        <div class=\"link\">").concat(node.link, "</div>\n        <div class=\"close\">\n          <svg class=\"icon\">\n            <use xlink:href=\"#icon-close1\"></use>\n          </svg>\n        </div>\n      </div>\n    </a>\n  </li>")));
+      $("#img".concat(index)).on("error", function (e) {
+        // $(this).parent().html(node.logo);
+        hashMap[index].logoType = "text";
+        saveData(hashMap);
         render();
-        return false;
       });
-      $(document).on("keypress", function (e) {
-        if (node.logo === e.key) {
+    }
+
+    $("li:nth-child(".concat(index + 1)).on("click", ".close", function (e) {
+      e.preventDefault();
+      hashMap.splice(index, 1);
+      saveData(hashMap);
+      render();
+    });
+    $(document).on("keypress", function (e) {
+      if (e.key === node.logo) {
+        if (!e.target.matches("input")) {
           window.open(node.url, "_self");
         }
-      });
-    });
-    $last.css("display", "block");
-  };
-
-  render();
-  $(".addButton").on("click", function () {
-    var link = window.prompt("\u8BF7\u8F93\u5165\u7F51\u5740\uFF1A");
-    var url;
-
-    if (link) {
-      if (link.indexOf("http") === 0 || link.indexOf("//") === 0) {
-        url = link;
-      } else {
-        url = "//" + link;
       }
-
-      link = link.replace("https://", "").replace("http://", "").replace(/\/.*/, "");
-      var linkArr = link.split(".");
-      hashMap.push({
-        logoType: "text",
-        logo: linkArr[linkArr.length - 2][0],
-        link: link,
-        url: url
-      });
-      var string = JSON.stringify(hashMap);
-      window.localStorage.setItem("x", string);
-      render();
-    }
+    });
   });
-})();
+  $last.css("visibility", "visible");
+}
+
+var $siteList = $(".siteList");
+var $last = $(".last");
+var hashMap = loadData() || [{
+  logoType: "image",
+  logo: "a",
+  link: "iconfont.cn",
+  url: "//iconfont.cn",
+  img: "//iconfont.cn/favicon.ico"
+}, {
+  logoType: "image",
+  logo: "b",
+  link: "bilibili.com",
+  url: "//bilibili.com",
+  img: "//bilibili.com/favicon.ico"
+}, {
+  logoType: "image",
+  logo: "c",
+  link: "css-tricks.com",
+  url: "//css-tricks.com",
+  img: "//css-tricks.com/favicon.ico"
+}, {
+  logoType: "image",
+  logo: "d",
+  link: "developer.mozilla.org",
+  url: "//developer.mozilla.org",
+  img: "//developer.mozilla.org/favicon.ico"
+}, {
+  logoType: "image",
+  logo: "g",
+  link: "github.com",
+  url: "//github.com",
+  img: "//github.com/favicon.ico"
+}, {
+  logoType: "image",
+  logo: "j",
+  link: "api.jquery.com",
+  url: "//api.jquery.com",
+  img: "//api.jquery.com/favicon.ico"
+}, {
+  logoType: "image",
+  logo: "y",
+  link: "yuque.com",
+  url: "//yuque.com",
+  img: "//yuque.com/favicon.ico"
+}, {
+  logoType: "image",
+  logo: "z",
+  link: "zhihu.com",
+  url: "//zhihu.com",
+  img: "//zhihu.com/favicon.ico"
+}];
+render();
+$(".addButton").on("click", function () {
+  var urlString = window.prompt("\u8BF7\u8F93\u5165\u7F51\u5740\uFF1A");
+  var url;
+
+  if (urlString) {
+    if (urlString.indexOf("http") === 0 || urlString.indexOf("//") === 0) {
+      url = urlString;
+    } else {
+      url = "//" + urlString;
+    }
+
+    var link = urlString.replace("https://", "").replace("http://", "").replace("www.", "").replace(/\/.*/, "");
+    hashMap.push({
+      logoType: "image",
+      logo: link[0],
+      link: link,
+      img: url + "/favicon.ico",
+      url: url
+    });
+    saveData(hashMap);
+    render();
+  }
+});
 },{}]},{},["epB2"], null)
-//# sourceMappingURL=main.781d2d49.js.map
+//# sourceMappingURL=main.0f8b6496.js.map
