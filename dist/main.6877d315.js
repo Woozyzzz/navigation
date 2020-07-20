@@ -162,7 +162,7 @@ var $siteList = $(".siteList");
 var $last = $(".last");
 var hashMap = loadData() || [{
   logoType: "image",
-  logo: "a",
+  logo: "i",
   link: "iconfont.cn",
   url: "//iconfont.cn",
   img: "//iconfont.cn/favicon.ico"
@@ -234,4 +234,4 @@ $(".addButton").on("click", function () {
   }
 });
 },{}]},{},["epB2"], null)
-//# sourceMappingURL=main.0f8b6496.js.map
+//# sourceMappingURL=main.6877d315.js.map

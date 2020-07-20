@@ -70,7 +70,7 @@ const $last = $(`.last`);
 const hashMap = loadData() || [
   {
     logoType: "image",
-    logo: "a",
+    logo: "i",
     link: "iconfont.cn",
     url: "//iconfont.cn",
     img: "//iconfont.cn/favicon.ico",
